@@ -1,0 +1,25 @@
+.c03 {
+  --c03-bg: #0b0c10;
+  --c03-bg2: #1c2333;
+  --c03-fg: #e6e1d6;
+  --c03-gold: #c9a66b;
+  background: var(--c03-bg);
+  color: var(--c03-fg);
+  font-family: var(--font-c03-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c03 .c03-display {
+  font-family: var(--font-c03-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.c03 .c03-glow {
+  box-shadow: 0 0 120px rgba(201, 166, 107, 0.12);
+}
+
+.c03 .c03-gold-line {
+  background: linear-gradient(90deg, transparent, var(--c03-gold), transparent);
+  height: 1px;
+}

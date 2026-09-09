@@ -1,0 +1,62 @@
+.c04 {
+  --c04-bg: #f3ebdd;
+  --c04-bg2: #e9dfcc;
+  --c04-fg: #2e2a26;
+  --c04-terra: #b5533c;
+  --c04-sand: #d9b99b;
+  --c04-thread: #c8412b;
+  background: var(--c04-bg);
+  color: var(--c04-fg);
+  font-family: var(--font-c04-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c04 .c04-display {
+  font-family: var(--font-c04-display), Georgia, serif;
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+  letter-spacing: -0.015em;
+}
+
+.c04 .c04-arch {
+  border-radius: 999px 999px 24px 24px;
+}
+
+.c04 .c04-thread {
+  stroke: var(--c04-thread);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 8 6;
+  animation: c04-run 30s linear infinite;
+}
+
+@keyframes c04-run {
+  to {
+    stroke-dashoffset: -700;
+  }
+}
+
+.c04 .c04-pattern {
+  stroke: var(--c04-fg);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  fill: none;
+  stroke-dasharray: 4 4;
+}
+
+.c04 .c04-card {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+}
+
+.c04 .c04-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 50px -30px rgba(46, 42, 38, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c04 .c04-thread {
+    animation: none;
+  }
+  .c04 .c04-card {
+    transition: none;
+  }
+}

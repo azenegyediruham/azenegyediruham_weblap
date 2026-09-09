@@ -12,7 +12,8 @@
     "db:push": "node scripts/db.mjs push",
     "db:seed": "node scripts/db.mjs seed",
     "db:types": "node scripts/db.mjs types",
-    "models:generate": "node scripts/generate-tshirt-glb.mjs"
+    "models:generate": "node scripts/generate-tshirt-glb.mjs",
+    "shot": "node scripts/screenshot.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -40,6 +41,7 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "16.3.4",
     "jsdom": "^30.0.1",
+    "playwright": "^1.63.0",
     "tailwindcss": "^4",
     "typescript": "^5.9.3",
     "vitest": "^5.0.0"
