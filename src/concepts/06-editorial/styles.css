@@ -1,0 +1,57 @@
+.c06 {
+  --c06-bg: #ffffff;
+  --c06-fg: #151515;
+  --c06-red: #b23a3a;
+  --c06-paper: #e8e4dc;
+  --c06-rule: #151515;
+  background: var(--c06-bg);
+  color: var(--c06-fg);
+  font-family: var(--font-c06-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c06 .c06-serif {
+  font-family: var(--font-c06-serif), Georgia, "Times New Roman", serif;
+}
+
+.c06 .c06-rule {
+  border-top: 1px solid var(--c06-rule);
+}
+
+.c06 .c06-rule-thick {
+  border-top: 3px solid var(--c06-rule);
+}
+
+.c06 .c06-dropcap::first-letter {
+  font-family: var(--font-c06-serif), Georgia, serif;
+  font-size: 4.4em;
+  font-weight: 700;
+  float: left;
+  line-height: 0.8;
+  margin: 0.08em 0.12em 0 0;
+  color: var(--c06-red);
+}
+
+.c06 .c06-columns {
+  column-count: 1;
+  column-gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .c06 .c06-columns {
+    column-count: 2;
+  }
+}
+
+.c06 .c06-caption {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(21, 21, 21, 0.6);
+}
+
+.c06 .c06-folio {
+  font-family: var(--font-c06-serif), Georgia, serif;
+  font-style: italic;
+  color: rgba(21, 21, 21, 0.5);
+}

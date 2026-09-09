@@ -1,0 +1,71 @@
+.c05 {
+  --c05-bg: #0e1014;
+  --c05-panel: #161a21;
+  --c05-line: #262b35;
+  --c05-fg: #e9ecf1;
+  --c05-accent: #8f7cff;
+  background: var(--c05-bg);
+  color: var(--c05-fg);
+  font-family: var(--font-c05-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c05 .c05-mono {
+  font-family: var(--font-c05-mono), ui-monospace, monospace;
+}
+
+.c05 .c05-stage {
+  background: radial-gradient(ellipse at 50% 30%, #1b2030 0%, #0e1014 65%);
+  box-shadow: inset 0 0 0 1px var(--c05-line);
+}
+
+.c05 .c05-stage-floor {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  width: 70%;
+  height: 22%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(143, 124, 255, 0.22), rgba(143, 124, 255, 0) 70%);
+  filter: blur(6px);
+}
+
+.c05 .c05-stage-lines {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to bottom, rgba(233, 236, 241, 0.06) 1px, transparent 1px);
+  background-size: 100% 48px;
+  mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+}
+
+.c05 .c05-card {
+  border: 1px solid var(--c05-line);
+  background: linear-gradient(180deg, var(--c05-panel), var(--c05-bg));
+  transition: border-color 0.3s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.c05 .c05-card:hover {
+  border-color: var(--c05-accent);
+  transform: translateY(-3px);
+}
+
+.c05 .c05-glow-text {
+  text-shadow: 0 0 40px rgba(143, 124, 255, 0.25);
+}
+
+.c05 .c05-timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 11px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--c05-accent), var(--c05-line));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c05 .c05-card {
+    transition: none;
+  }
+}

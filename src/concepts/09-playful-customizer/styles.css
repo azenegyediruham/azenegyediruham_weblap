@@ -1,0 +1,76 @@
+.c09 {
+  --c09-bg: #fff7e8;
+  --c09-coral: #ff6b4a;
+  --c09-teal: #2bb3a3;
+  --c09-yellow: #ffd166;
+  --c09-ink: #1f1f1f;
+  background: var(--c09-bg);
+  color: var(--c09-ink);
+  font-family: var(--font-c09), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c09 .c09-panel {
+  box-shadow: 0 1px 0 rgba(31, 31, 31, 0.06), 0 20px 40px -30px rgba(31, 31, 31, 0.25);
+}
+
+.c09 .c09-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.c09 .c09-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(31, 31, 31, 0.1);
+}
+
+.c09 .c09-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--c09-coral);
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.c09 .c09-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--c09-coral);
+  border: 3px solid white;
+  cursor: pointer;
+}
+
+.c09 .c09-pill {
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.c09 .c09-card {
+  border-radius: 28px;
+  background: white;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.c09 .c09-card:hover {
+  transform: translateY(-6px) rotate(-1deg);
+  box-shadow: 0 24px 40px -24px rgba(31, 31, 31, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c09 .c09-card {
+    transition: none;
+  }
+}

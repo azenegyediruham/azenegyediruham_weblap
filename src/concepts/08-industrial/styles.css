@@ -1,0 +1,74 @@
+.c08 {
+  --c08-bg: #ededea;
+  --c08-ink: #1a1a1a;
+  --c08-orange: #ff5a1f;
+  --c08-grey: #b8b8b2;
+  --c08-line: rgba(26, 26, 26, 0.18);
+  background-color: var(--c08-bg);
+  background-image: linear-gradient(to right, rgba(26, 26, 26, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(26, 26, 26, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  color: var(--c08-ink);
+  font-family: var(--font-c08-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c08 .c08-mono {
+  font-family: var(--font-c08-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.c08 .c08-box {
+  border: 1px solid var(--c08-ink);
+  background: var(--c08-bg);
+}
+
+.c08 .c08-label {
+  font-family: var(--font-c08-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.c08 .c08-tag {
+  display: inline-block;
+  border: 1px solid var(--c08-ink);
+  padding: 2px 8px;
+  font-family: var(--font-c08-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.c08 .c08-corner {
+  position: relative;
+}
+
+.c08 .c08-corner::before,
+.c08 .c08-corner::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--c08-orange);
+  border-style: solid;
+}
+
+.c08 .c08-corner::before {
+  left: -1px;
+  top: -1px;
+  border-width: 2px 0 0 2px;
+}
+
+.c08 .c08-corner::after {
+  right: -1px;
+  bottom: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+.c08 .c08-row {
+  transition: background-color 0.2s ease;
+}
+
+.c08 .c08-row:hover {
+  background-color: rgba(26, 26, 26, 0.04);
+}

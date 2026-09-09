@@ -1,0 +1,76 @@
+.c07 {
+  --c07-ink: #111111;
+  --c07-paper: #fff8e7;
+  color: var(--c07-ink);
+  background: var(--c07-paper);
+  font-family: var(--font-c07-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.c07 .c07-display {
+  font-family: var(--font-c07-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.c07 .c07-mono {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.c07 .c07-canvas {
+  transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1), color 0.7s ease;
+}
+
+.c07 .c07-chip {
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.c07 .c07-btn {
+  border-radius: 999px;
+  padding: 14px 26px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: transform 0.2s ease;
+}
+
+.c07 .c07-btn:hover {
+  transform: translateY(-2px);
+}
+
+.c07 .c07-product {
+  border: 2px solid;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.18);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.c07 .c07-product:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.c07 .c07-step {
+  border-radius: 24px;
+  padding: 28px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c07 .c07-canvas,
+  .c07 .c07-chip,
+  .c07 .c07-btn,
+  .c07 .c07-product {
+    transition: none;
+  }
+}
