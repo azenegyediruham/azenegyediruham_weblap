@@ -49,3 +49,7 @@ supabase/.branches/
 
 # Supabase CLI local state
 supabase/.temp/
+
+
+# lokális fejlesztői tesztoldalak (nem kerülnek deployra)
+/src/app/dev/
