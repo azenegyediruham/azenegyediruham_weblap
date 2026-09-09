@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { CartBadge, ProfileLink } from "./CartBadge";
 
 const NAV = [
   { href: "/shop/", label: "Ruhák" },
@@ -25,12 +26,8 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-3 text-sm">
-          <Link href="/cart/" className="rounded-full border border-line px-3 py-1.5 transition hover:border-foreground">
-            Kosár
-          </Link>
-          <Link href="/profile/" className="rounded-full bg-accent px-3 py-1.5 text-accent-foreground transition hover:opacity-90">
-            Profil
-          </Link>
+          <CartBadge />
+          <ProfileLink />
         </div>
       </div>
     </header>

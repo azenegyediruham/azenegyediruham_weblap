@@ -158,6 +158,91 @@ export const tshirtZones: CustomizationZone[] = [
   { id: "zone-right-sleeve", key: "right_sleeve", displayName: "Jobb ujj", viewKey: "right_sleeve", rectCm: { x: 13, y: 5, w: 10, h: 10 }, minWidthCm: 3, maxWidthCm: 10, maxHeightCm: 10, isActive: true, sortOrder: 7 },
 ];
 
+interface GenericSpec {
+  slug: string;
+  name: string;
+  silhouette: GarmentModel["silhouette"];
+  w: number;
+  h: number;
+  zones: Array<[string, string, "front" | "back", number, number, number, number, number, number, number]>;
+}
+
+/** 3D modell nélküli ruhák: általános elöl/hátul chart + zónák (csak 2D szerkesztés). */
+const GENERIC_SPECS: GenericSpec[] = [
+  { slug: "generic-hoodie", name: "Kapucnis pulóver (2D)", silhouette: "hoodie", w: 54, h: 72, zones: [
+    ["front_center", "Elöl, középen", "front", 13, 18, 28, 26, 4, 28, 26],
+    ["front_chest_left", "Bal mellkas", "front", 30, 12, 12, 12, 3, 12, 12],
+    ["front_chest_right", "Jobb mellkas", "front", 12, 12, 12, 12, 3, 12, 12],
+    ["back_center", "Hátul, középen", "back", 13, 18, 28, 34, 4, 28, 34],
+    ["upper_back", "Felső hát", "back", 15, 6, 24, 9, 3, 24, 9],
+  ] },
+  { slug: "generic-sweatshirt", name: "Kerek nyakú pulóver (2D)", silhouette: "sweatshirt", w: 54, h: 72, zones: [
+    ["front_center", "Elöl, középen", "front", 13, 16, 28, 34, 4, 28, 34],
+    ["front_chest_left", "Bal mellkas", "front", 30, 13, 12, 12, 3, 12, 12],
+    ["front_chest_right", "Jobb mellkas", "front", 12, 13, 12, 12, 3, 12, 12],
+    ["back_center", "Hátul, középen", "back", 13, 18, 28, 34, 4, 28, 34],
+    ["upper_back", "Felső hát", "back", 15, 6, 24, 9, 3, 24, 9],
+  ] },
+  { slug: "generic-tank", name: "Trikó (2D)", silhouette: "tank", w: 46, h: 70, zones: [
+    ["front_center", "Elöl, középen", "front", 10, 22, 26, 28, 4, 26, 28],
+    ["front_chest_left", "Bal mellkas", "front", 24, 16, 12, 10, 3, 12, 10],
+    ["back_center", "Hátul, középen", "back", 10, 22, 26, 28, 4, 26, 28],
+  ] },
+  { slug: "generic-shorts", name: "Rövidnadrág (2D)", silhouette: "shorts", w: 54, h: 46, zones: [
+    ["front_left_leg", "Bal comb", "front", 30, 12, 14, 18, 3, 14, 18],
+    ["front_right_leg", "Jobb comb", "front", 10, 12, 14, 18, 3, 14, 18],
+    ["back_pocket_left", "Bal hátsó zseb", "back", 30, 8, 12, 10, 3, 12, 10],
+  ] },
+  { slug: "generic-pants", name: "Hosszúnadrág (2D)", silhouette: "pants", w: 54, h: 104, zones: [
+    ["front_left_thigh", "Bal comb", "front", 30, 16, 14, 20, 3, 14, 20],
+    ["front_right_thigh", "Jobb comb", "front", 10, 16, 14, 20, 3, 14, 20],
+    ["left_leg_hem", "Bal szár alja", "front", 32, 80, 12, 14, 3, 12, 14],
+    ["back_pocket_left", "Bal hátsó zseb", "back", 30, 8, 12, 10, 3, 12, 10],
+  ] },
+  { slug: "generic-dress", name: "Ruha (2D)", silhouette: "dress", w: 54, h: 96, zones: [
+    ["front_center", "Elöl, középen", "front", 14, 22, 26, 30, 4, 26, 30],
+    ["front_chest_left", "Bal mellkas", "front", 28, 12, 12, 12, 3, 12, 12],
+    ["hem_front", "Szegély elöl", "front", 10, 70, 34, 18, 3, 34, 18],
+    ["back_center", "Hátul, középen", "back", 14, 22, 26, 30, 4, 26, 30],
+  ] },
+  { slug: "generic-skirt", name: "Szoknya (2D)", silhouette: "skirt", w: 54, h: 72, zones: [
+    ["front_center", "Elöl, középen", "front", 13, 20, 28, 30, 4, 28, 30],
+    ["front_pocket_left", "Bal zseb", "front", 32, 10, 12, 12, 3, 12, 12],
+    ["hem_front", "Szegély elöl", "front", 8, 50, 38, 16, 3, 38, 16],
+  ] },
+];
+
+function genericModel(spec: GenericSpec): GarmentModel {
+  return {
+    id: `gm-${spec.slug}`,
+    slug: spec.slug,
+    name: spec.name,
+    modelPath: null,
+    mappingMode: "uv",
+    silhouette: spec.silhouette,
+    charts: [
+      { key: "front", meshName: "Front", widthCm: spec.w, heightCm: spec.h },
+      { key: "back", meshName: "Back", widthCm: spec.w, heightCm: spec.h },
+    ],
+    views: [
+      { key: "front", label: "Elöl", chartKey: "front", crop: { x: 0, y: 0, w: spec.w, h: spec.h }, silhouette: spec.silhouette },
+      { key: "back", label: "Hátul", chartKey: "back", crop: { x: 0, y: 0, w: spec.w, h: spec.h }, silhouette: spec.silhouette },
+    ],
+    zones: spec.zones.map(([key, name, view, x, y, w, h, minW, maxW, maxH], i) => ({
+      id: `zone-${spec.slug}-${key}`,
+      key,
+      displayName: name,
+      viewKey: view,
+      rectCm: { x, y, w, h },
+      minWidthCm: minW,
+      maxWidthCm: maxW,
+      maxHeightCm: maxH,
+      isActive: true,
+      sortOrder: i + 1,
+    })),
+  };
+}
+
 export const garmentModels: GarmentModel[] = [
   {
     id: "gm-tshirt",
@@ -179,6 +264,7 @@ export const garmentModels: GarmentModel[] = [
     ],
     zones: tshirtZones,
   },
+  ...GENERIC_SPECS.map(genericModel),
 ];
 
 interface ProductSeed {
@@ -327,7 +413,7 @@ export const productSeeds: ProductSeed[] = [
     description: "Bolyhozott belsejű, 320 g/m² pamut-poliészter pulóver kengurus zsebbel. Nagy hátsó és mellkasi hímzésekhez.",
     categorySlug: "pulover",
     gender: "unisex",
-    garmentModelSlug: null,
+    garmentModelSlug: "generic-hoodie",
     silhouette: "hoodie",
     sizeChartId: "sc-hoodie",
     basePriceHuf: 12990,
@@ -344,7 +430,7 @@ export const productSeeds: ProductSeed[] = [
     description: "Klasszikus crewneck, bordás mandzsetta és derékrész, puha belső. Elegánsabb, mint a kapucnis, ideális céges hímzéshez.",
     categorySlug: "pulover",
     gender: "unisex",
-    garmentModelSlug: null,
+    garmentModelSlug: "generic-sweatshirt",
     silhouette: "sweatshirt",
     sizeChartId: "sc-hoodie",
     basePriceHuf: 10990,
@@ -360,7 +446,7 @@ export const productSeeds: ProductSeed[] = [
     description: "Ujjatlan, könnyű pamut felső nyárra és edzéshez. Kis mellkasi hímzés a klasszikus választás.",
     categorySlug: "triko",
     gender: "men",
-    garmentModelSlug: null,
+    garmentModelSlug: "generic-tank",
     silhouette: "tank",
     sizeChartId: "sc-tshirt-unisex",
     basePriceHuf: 4990,
@@ -375,7 +461,7 @@ export const productSeeds: ProductSeed[] = [
     description: "Karcsúsított, puha pamut trikó vékony pánttal. Apró, finom hímzésekhez ajánlott.",
     categorySlug: "triko",
     gender: "women",
-    garmentModelSlug: null,
+    garmentModelSlug: "generic-tank",
     silhouette: "tank",
     sizeChartId: "sc-tshirt-women",
     basePriceHuf: 4990,
@@ -390,7 +476,7 @@ export const productSeeds: ProductSeed[] = [
     description: "Kényelmes, gumis derekú rövidnadrág zsebekkel. A hímzés a bal combrészen kap helyet.",
     categorySlug: "rovidnadrag",
     gender: "unisex",
-    garmentModelSlug: null,
+    garmentModelSlug: "generic-shorts",
     silhouette: "shorts",
     sizeChartId: "sc-shorts",
     basePriceHuf: 8990,
@@ -405,7 +491,7 @@ export const productSeeds: ProductSeed[] = [
     description: "Bolyhozott belsejű, egyenes szárú melegítőnadrág. Szett a kapucnis pulóverrel, azonos hímzéssel.",
     categorySlug: "hosszunadrag",
     gender: "unisex",
-    garmentModelSlug: null,
+    garmentModelSlug: "generic-pants",
     silhouette: "pants",
     sizeChartId: "sc-pants",
     basePriceHuf: 11990,
@@ -420,7 +506,7 @@ export const productSeeds: ProductSeed[] = [
     description: "Könnyű, A-vonalú pamutruha rövid ujjal. Botanikus hímzés a mellrészen vagy a szegélyen.",
     categorySlug: "ruha",
     gender: "women",
-    garmentModelSlug: null,
+    garmentModelSlug: "generic-dress",
     silhouette: "dress",
     sizeChartId: "sc-dress",
     basePriceHuf: 13990,
@@ -436,7 +522,7 @@ export const productSeeds: ProductSeed[] = [
     description: "Magas derekú, enyhén bővülő midi szoknya. Kis hímzés a zsebnél vagy a szegély fölött.",
     categorySlug: "szoknya",
     gender: "women",
-    garmentModelSlug: null,
+    garmentModelSlug: "generic-skirt",
     silhouette: "skirt",
     sizeChartId: "sc-skirt",
     basePriceHuf: 9990,

@@ -135,6 +135,61 @@ on conflict (garment_model_id, key) do update set display_name = excluded.displa
   rect_x = excluded.rect_x, rect_y = excluded.rect_y, rect_w = excluded.rect_w, rect_h = excluded.rect_h,
   min_width_cm = excluded.min_width_cm, max_width_cm = excluded.max_width_cm, max_height_cm = excluded.max_height_cm, sort_order = excluded.sort_order;
 
+-- Általános 2D modellek (3D nélkül) a többi ruhatípushoz ------------------
+insert into public.garment_models (id, slug, name, model_path, mapping_mode, silhouette, charts, views)
+select public.seed_uuid('garment:' || v.slug), v.slug, v.name, null, 'uv', v.silhouette,
+  jsonb_build_array(
+    jsonb_build_object('key','front','meshName','Front','widthCm',v.w,'heightCm',v.h),
+    jsonb_build_object('key','back','meshName','Back','widthCm',v.w,'heightCm',v.h)),
+  jsonb_build_array(
+    jsonb_build_object('key','front','label','Elöl','chartKey','front','crop',jsonb_build_object('x',0,'y',0,'w',v.w,'h',v.h),'silhouette',v.silhouette),
+    jsonb_build_object('key','back','label','Hátul','chartKey','back','crop',jsonb_build_object('x',0,'y',0,'w',v.w,'h',v.h),'silhouette',v.silhouette))
+from (values
+  ('generic-hoodie', 'Kapucnis pulóver (2D)', 'hoodie', 54, 72),
+  ('generic-sweatshirt', 'Kerek nyakú pulóver (2D)', 'sweatshirt', 54, 72),
+  ('generic-tank', 'Trikó (2D)', 'tank', 46, 70),
+  ('generic-shorts', 'Rövidnadrág (2D)', 'shorts', 54, 46),
+  ('generic-pants', 'Hosszúnadrág (2D)', 'pants', 54, 104),
+  ('generic-dress', 'Ruha (2D)', 'dress', 54, 96),
+  ('generic-skirt', 'Szoknya (2D)', 'skirt', 54, 72)
+) as v(slug, name, silhouette, w, h)
+on conflict (slug) do update set name = excluded.name, charts = excluded.charts, views = excluded.views, silhouette = excluded.silhouette;
+
+insert into public.customization_zones (id, garment_model_id, key, display_name, view_key, rect_x, rect_y, rect_w, rect_h, min_width_cm, max_width_cm, max_height_cm, sort_order)
+select public.seed_uuid('zone:' || v.model || ':' || v.key), public.seed_uuid('garment:' || v.model), v.key, v.name, v.view::public.garment_view, v.x, v.y, v.w, v.h, v.minw, v.maxw, v.maxh, v.ord
+from (values
+  ('generic-hoodie', 'front_center', 'Elöl, középen', 'front', 13, 18, 28, 26, 4, 28, 26, 1),
+  ('generic-hoodie', 'front_chest_left', 'Bal mellkas', 'front', 30, 12, 12, 12, 3, 12, 12, 2),
+  ('generic-hoodie', 'front_chest_right', 'Jobb mellkas', 'front', 12, 12, 12, 12, 3, 12, 12, 3),
+  ('generic-hoodie', 'back_center', 'Hátul, középen', 'back', 13, 18, 28, 34, 4, 28, 34, 4),
+  ('generic-hoodie', 'upper_back', 'Felső hát', 'back', 15, 6, 24, 9, 3, 24, 9, 5),
+  ('generic-sweatshirt', 'front_center', 'Elöl, középen', 'front', 13, 16, 28, 34, 4, 28, 34, 1),
+  ('generic-sweatshirt', 'front_chest_left', 'Bal mellkas', 'front', 30, 13, 12, 12, 3, 12, 12, 2),
+  ('generic-sweatshirt', 'front_chest_right', 'Jobb mellkas', 'front', 12, 13, 12, 12, 3, 12, 12, 3),
+  ('generic-sweatshirt', 'back_center', 'Hátul, középen', 'back', 13, 18, 28, 34, 4, 28, 34, 4),
+  ('generic-sweatshirt', 'upper_back', 'Felső hát', 'back', 15, 6, 24, 9, 3, 24, 9, 5),
+  ('generic-tank', 'front_center', 'Elöl, középen', 'front', 10, 22, 26, 28, 4, 26, 28, 1),
+  ('generic-tank', 'front_chest_left', 'Bal mellkas', 'front', 24, 16, 12, 10, 3, 12, 10, 2),
+  ('generic-tank', 'back_center', 'Hátul, középen', 'back', 10, 22, 26, 28, 4, 26, 28, 3),
+  ('generic-shorts', 'front_left_leg', 'Bal comb', 'front', 30, 12, 14, 18, 3, 14, 18, 1),
+  ('generic-shorts', 'front_right_leg', 'Jobb comb', 'front', 10, 12, 14, 18, 3, 14, 18, 2),
+  ('generic-shorts', 'back_pocket_left', 'Bal hátsó zseb', 'back', 30, 8, 12, 10, 3, 12, 10, 3),
+  ('generic-pants', 'front_left_thigh', 'Bal comb', 'front', 30, 16, 14, 20, 3, 14, 20, 1),
+  ('generic-pants', 'front_right_thigh', 'Jobb comb', 'front', 10, 16, 14, 20, 3, 14, 20, 2),
+  ('generic-pants', 'left_leg_hem', 'Bal szár alja', 'front', 32, 80, 12, 14, 3, 12, 14, 3),
+  ('generic-pants', 'back_pocket_left', 'Bal hátsó zseb', 'back', 30, 8, 12, 10, 3, 12, 10, 4),
+  ('generic-dress', 'front_center', 'Elöl, középen', 'front', 14, 22, 26, 30, 4, 26, 30, 1),
+  ('generic-dress', 'front_chest_left', 'Bal mellkas', 'front', 28, 12, 12, 12, 3, 12, 12, 2),
+  ('generic-dress', 'hem_front', 'Szegély elöl', 'front', 10, 70, 34, 18, 3, 34, 18, 3),
+  ('generic-dress', 'back_center', 'Hátul, középen', 'back', 14, 22, 26, 30, 4, 26, 30, 4),
+  ('generic-skirt', 'front_center', 'Elöl, középen', 'front', 13, 20, 28, 30, 4, 28, 30, 1),
+  ('generic-skirt', 'front_pocket_left', 'Bal zseb', 'front', 32, 10, 12, 12, 3, 12, 12, 2),
+  ('generic-skirt', 'hem_front', 'Szegély elöl', 'front', 8, 50, 38, 16, 3, 38, 16, 3)
+) as v(model, key, name, view, x, y, w, h, minw, maxw, maxh, ord)
+on conflict (garment_model_id, key) do update set display_name = excluded.display_name, view_key = excluded.view_key,
+  rect_x = excluded.rect_x, rect_y = excluded.rect_y, rect_w = excluded.rect_w, rect_h = excluded.rect_h,
+  min_width_cm = excluded.min_width_cm, max_width_cm = excluded.max_width_cm, max_height_cm = excluded.max_height_cm, sort_order = excluded.sort_order;
+
 -- Termékek ----------------------------------------------------------------
 insert into public.products (id, slug, name, description, category_id, gender, garment_model_id, size_chart_id, silhouette, base_price_huf, is_featured, tags, sort_order)
 select public.seed_uuid('product:' || v.slug), v.slug, v.name, v.description,
@@ -147,14 +202,14 @@ from (values
   ('noi-slim-polo', 'Női slim póló', 'Karcsúsított szabású, puha, elasztikus pamut póló nőknek. Kis mellkasi logóhoz és nagy hátsó mintához egyaránt ideális.', 'polo', 'women', 'tshirt', 'tshirt-women', 'tshirt', 6490, true, array['női'], 2),
   ('oversize-polo', 'Oversize póló', 'Vastag, 240 g/m² pamut, lecsúszott váll, bő szabás. Streetwear alap nagy hátsó hímzésekhez.', 'polo', 'unisex', 'tshirt', 'tshirt-unisex', 'tshirt', 7490, true, array['heavyweight', 'streetwear'], 3),
   ('heavy-polo', 'Heavy pamut póló', 'Prémium, 260 g/m² organikus pamut, feszes gallér, klasszikus szabás. Az a póló, ami évekig megmarad.', 'polo', 'men', 'tshirt', 'tshirt-unisex', 'tshirt', 8990, false, array['organikus', 'prémium'], 4),
-  ('kapucnis-pulover', 'Kapucnis pulóver', 'Bolyhozott belsejű, 320 g/m² pamut-poliészter pulóver kengurus zsebbel. Nagy hátsó és mellkasi hímzésekhez.', 'pulover', 'unisex', null, 'hoodie', 'hoodie', 12990, true, array['meleg'], 5),
-  ('kerek-nyaku-pulover', 'Kerek nyakú pulóver', 'Klasszikus crewneck, bordás mandzsetta és derékrész, puha belső. Elegánsabb, mint a kapucnis, ideális céges hímzéshez.', 'pulover', 'unisex', null, 'hoodie', 'sweatshirt', 10990, false, array['céges'], 6),
-  ('ferfi-triko', 'Férfi trikó', 'Ujjatlan, könnyű pamut felső nyárra és edzéshez. Kis mellkasi hímzés a klasszikus választás.', 'triko', 'men', null, 'tshirt-unisex', 'tank', 4990, false, array[]::text[], 7),
-  ('noi-triko', 'Női trikó', 'Karcsúsított, puha pamut trikó vékony pánttal. Apró, finom hímzésekhez ajánlott.', 'triko', 'women', null, 'tshirt-women', 'tank', 4990, false, array[]::text[], 8),
-  ('pamut-rovidnadrag', 'Pamut rövidnadrág', 'Kényelmes, gumis derekú rövidnadrág zsebekkel. A hímzés a bal combrészen kap helyet.', 'rovidnadrag', 'unisex', null, 'shorts', 'shorts', 8990, false, array[]::text[], 9),
-  ('melegito-nadrag', 'Melegítő hosszúnadrág', 'Bolyhozott belsejű, egyenes szárú melegítőnadrág. Szett a kapucnis pulóverrel, azonos hímzéssel.', 'hosszunadrag', 'unisex', null, 'pants', 'pants', 11990, false, array[]::text[], 10),
-  ('nyari-ruha', 'Nyári pamutruha', 'Könnyű, A-vonalú pamutruha rövid ujjal. Botanikus hímzés a mellrészen vagy a szegélyen.', 'ruha', 'women', null, 'dress', 'dress', 13990, true, array[]::text[], 11),
-  ('midi-szoknya', 'Midi szoknya', 'Magas derekú, enyhén bővülő midi szoknya. Kis hímzés a zsebnél vagy a szegély fölött.', 'szoknya', 'women', null, 'skirt', 'skirt', 9990, false, array[]::text[], 12)
+  ('kapucnis-pulover', 'Kapucnis pulóver', 'Bolyhozott belsejű, 320 g/m² pamut-poliészter pulóver kengurus zsebbel. Nagy hátsó és mellkasi hímzésekhez.', 'pulover', 'unisex', 'generic-hoodie', 'hoodie', 'hoodie', 12990, true, array['meleg'], 5),
+  ('kerek-nyaku-pulover', 'Kerek nyakú pulóver', 'Klasszikus crewneck, bordás mandzsetta és derékrész, puha belső. Elegánsabb, mint a kapucnis, ideális céges hímzéshez.', 'pulover', 'unisex', 'generic-sweatshirt', 'hoodie', 'sweatshirt', 10990, false, array['céges'], 6),
+  ('ferfi-triko', 'Férfi trikó', 'Ujjatlan, könnyű pamut felső nyárra és edzéshez. Kis mellkasi hímzés a klasszikus választás.', 'triko', 'men', 'generic-tank', 'tshirt-unisex', 'tank', 4990, false, array[]::text[], 7),
+  ('noi-triko', 'Női trikó', 'Karcsúsított, puha pamut trikó vékony pánttal. Apró, finom hímzésekhez ajánlott.', 'triko', 'women', 'generic-tank', 'tshirt-women', 'tank', 4990, false, array[]::text[], 8),
+  ('pamut-rovidnadrag', 'Pamut rövidnadrág', 'Kényelmes, gumis derekú rövidnadrág zsebekkel. A hímzés a bal combrészen kap helyet.', 'rovidnadrag', 'unisex', 'generic-shorts', 'shorts', 'shorts', 8990, false, array[]::text[], 9),
+  ('melegito-nadrag', 'Melegítő hosszúnadrág', 'Bolyhozott belsejű, egyenes szárú melegítőnadrág. Szett a kapucnis pulóverrel, azonos hímzéssel.', 'hosszunadrag', 'unisex', 'generic-pants', 'pants', 'pants', 11990, false, array[]::text[], 10),
+  ('nyari-ruha', 'Nyári pamutruha', 'Könnyű, A-vonalú pamutruha rövid ujjal. Botanikus hímzés a mellrészen vagy a szegélyen.', 'ruha', 'women', 'generic-dress', 'dress', 'dress', 13990, true, array[]::text[], 11),
+  ('midi-szoknya', 'Midi szoknya', 'Magas derekú, enyhén bővülő midi szoknya. Kis hímzés a zsebnél vagy a szegély fölött.', 'szoknya', 'women', 'generic-skirt', 'skirt', 'skirt', 9990, false, array[]::text[], 12)
 ) as v(slug, name, description, category, gender, garment, chart, silhouette, price, featured, tags, ord)
 on conflict (slug) do update set name = excluded.name, description = excluded.description, category_id = excluded.category_id,
   gender = excluded.gender, garment_model_id = excluded.garment_model_id, size_chart_id = excluded.size_chart_id,
