@@ -103,6 +103,7 @@ npm run build        # statikus export -> out/
 npm run shot -- http://localhost:3000/concepts/01-premium-minimal/ shots/01.png   # görgetett full-page screenshot
 node scripts/smoke-studio.mjs shots   # Studio smoke-teszt (termék -> minta -> drag -> 3D -> kosár)
 npm run models:generate               # public/models/tshirt.glb újragenerálása
+node scripts/create-user.mjs <email> <jelszó> admin   # megerősített felhasználó/admin létrehozása (service role kulccsal, csak fejlesztői gépről)
 ```
 
 ## Deployment (GitHub Pages)
